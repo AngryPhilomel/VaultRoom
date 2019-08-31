@@ -18,7 +18,7 @@ class Storages(models.Model):
 class Products(models.Model):
     LM = models.IntegerField(verbose_name='LM код')
     barcode = models.IntegerField(verbose_name='Штрихкод')
-    name = models.CharField(max_length=50, verbose_name='Наименование')
+    name = models.CharField(max_length=100, verbose_name='Наименование')
     department = models.IntegerField(verbose_name='Номер отдела')
 
     def __str__(self):

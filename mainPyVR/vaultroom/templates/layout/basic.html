@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type"
+        content="text/html; charset=utf-8">
+        <title>{% block titile %}Главная{% endblock %}</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'vaultroom/style.css' %}">
+    </head>
+    <body>
+        <header>
+            <h1>Склад</h1>
+        </header>
+        <nav>
+            <a href="{% url 'index' %}">Сток</a>
+            {% for storage in storages %}
+            <a href="{% url 'by_storage' storage_id=storage.pk %}">{{ storage.name }}</a>
+               {% endfor %}
+        </nav>
+        <section>
+            {% block content %}
+            {% endblock %}
+        </section>
+    </body>
+</html>
