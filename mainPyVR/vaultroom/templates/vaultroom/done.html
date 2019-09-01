@@ -1,0 +1,17 @@
+{% extends "layout/basic.html" %}
+{% block title %}Выдано{% endblock%}
+
+{% block content %}
+<table>
+    {% for d in done %}
+        <tr>
+            <td>{{ d.product.name }}</td>
+            <td>{{ d.quantity }}</td>
+            <td></td>
+            <td>{{ d.time }}</td>
+        </tr>
+    {% endfor %}
+
+
+</table>
+{% endblock %}

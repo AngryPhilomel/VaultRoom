@@ -1,13 +1,2 @@
-{% extends "layout/basic.html" %}
+{% extends "layout/stock_view.html" %}
 {% block title %}{{ current_storage.name }}{% endblock %}
-    {% block content %}
-<table>
-        {% for s in stc %}
-    <tr>
-        <td>{{ s.storage.name }}</td>
-        <td> {{ s.product.name }}</td>
-        <td>{{ s.quantity }}</td>
-    </tr>
-        {% endfor %}
-</table>
-    {% endblock %}
