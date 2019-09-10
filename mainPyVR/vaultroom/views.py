@@ -1,7 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
 from django.http import HttpResponse
 
 from .models import Stock, Storages, Products, Done
+from .forms import StockKorrSet
 
 def index(request):
     stc = Stock.objects.all()
@@ -27,4 +29,19 @@ def done(request):
     done = Done.objects.order_by('-time')
     context = {'done': done}
     return render(request, 'vaultroom/done.html', context)
+
+def stockKorr(request, product_id):
+    if request.method == 'POST':
+        formset = StockKorrSet(request.POST, queryset= Stock.objects.filter(product=product_id))
+        if formset.is_valid():
+            formset.save()
+            return redirect(reverse_lazy('index'))
+        else:
+            context = {'formset': formset}
+            return render(request, 'vaultroom/stockorr.html', context)
+    else:
+        formset = StockKorrSet(queryset=Stock.objects.filter(product=product_id))
+        context = {'form': formset}
+        return render(request, 'vaultroom/stockorr.html', context)
+
 

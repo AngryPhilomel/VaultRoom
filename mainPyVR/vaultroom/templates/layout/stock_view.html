@@ -13,6 +13,7 @@
             <td>{{ s.storage.name }}</td>
             <td><a href="{% url 'by_product' product_id=s.product.pk %}">{{ s.product.name }}</a></td>
             <td>{{ s.quantity }}</td>
+            <td><a href="{% url 'stockkorr' product_id=s.product.pk %}">Коррекция</a></td>
         </tr>
         {% endfor %}
     </table>
