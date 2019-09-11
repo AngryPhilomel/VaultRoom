@@ -6,11 +6,14 @@
             <a href="{% url 'by_storage' storage_id=storage.pk %}">{{ storage.name }}</a>
                {% endfor %}
  </nav>
-<section>
+
+
     <table>
         {% for s in stc %}
         <tr>
             <td>{{ s.storage.name }}</td>
+            <td>{{ s.product.LM }}</td>
+            <td>{{ s.product.barcode }}</td>
             <td><a href="{% url 'by_product' product_id=s.product.pk %}">{{ s.product.name }}</a></td>
             <td>{{ s.quantity }}</td>
             <td><a href="{% url 'stockkorr' product_id=s.product.pk %}">Коррекция</a></td>

@@ -1,1 +1,8 @@
 {% extends "layout/stock_view.html" %}
+{% block search %}
+<form method="post">
+            {% csrf_token %}
+            {{ form }}
+            <input type="submit", value="Поиск">
+    </form>
+{% endblock %}
