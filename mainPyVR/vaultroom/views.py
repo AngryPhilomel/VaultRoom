@@ -12,13 +12,13 @@ def index(request):
         if sf.is_valid():
             keyword = sf.cleaned_data['keyword']
             current_product = Products.objects.get(barcode=keyword)
-            stc = Stock.objects.filter(product=current_product.id)
+            stc = Stock.objects.select_related('product','storage').filter(product=current_product.id)
             storages = Storages.objects.all()
             sf = SearchForm()
             context = {'stc': stc, 'storages': storages, 'form': sf}
             return render(request, 'vaultroom/index.html', context)
     else:
-        stc = Stock.objects.all()
+        stc = Stock.objects.select_related('product','storage').all()
         storages = Storages.objects.all()
         sf = SearchForm()
         context = {'stc': stc, 'storages': storages, 'form': sf}
@@ -27,7 +27,7 @@ def index(request):
 
 
 def by_storage(request, storage_id):
-    stc = Stock.objects.filter(storage=storage_id)
+    stc = Stock.objects.select_related('product').filter(storage=storage_id)
     storages = Storages.objects.all()
     current_storage = Storages.objects.get(pk=storage_id)
     context = {'stc': stc, 'current_storage': current_storage, 'storages': storages,}
@@ -36,7 +36,7 @@ def by_storage(request, storage_id):
 
 
 def by_product(request, product_id):
-    stc = Stock.objects.filter(product=product_id)
+    stc = Stock.objects.select_related('product', 'storage').filter(product=product_id)
     storages = Storages.objects.all()
     current_product = Products.objects.get(pk=product_id)
     context = {'stc': stc, 'current_product': current_product, 'storages': storages,}
@@ -45,14 +45,14 @@ def by_product(request, product_id):
 
 
 def done(request):
-    done = Done.objects.order_by('-time')
+    done = Done.objects.select_related('product').order_by('-time')
     context = {'done': done}
     return render(request, 'vaultroom/done.html', context)
 
 
 def stockKorr(request, product_id):
     if request.method == 'POST':
-        formset = StockKorrSet(request.POST, queryset= Stock.objects.filter(product=product_id))
+        formset = StockKorrSet(request.POST, queryset= Stock.objects.select_related('product','storage').filter(product=product_id))
         if formset.is_valid():
             formset.save()
             return redirect(reverse_lazy('index'))
@@ -60,7 +60,7 @@ def stockKorr(request, product_id):
             context = {'formset': formset}
             return render(request, 'vaultroom/stockorr.html', context)
     else:
-        formset = StockKorrSet(queryset=Stock.objects.filter(product=product_id))
+        formset = StockKorrSet(queryset=Stock.objects.select_related('product','storage').filter(product=product_id))
         context = {'form': formset}
         return render(request, 'vaultroom/stockorr.html', context)
 
