@@ -1,4 +1,5 @@
 {% load static %}
+{% load bootstrap4 %}
 <!DOCTYPE html>
 <html>
     <head>
@@ -6,6 +7,8 @@
         content="text/html; charset=utf-8">
         <title>{% block title %}Главная{% endblock %}</title>
         <link rel="stylesheet" type="text/css" href="{% static 'vaultroom/style.css' %}">
+        {% bootstrap_css %}
+        {% bootstrap_javascript jquery='full' %}
     </head>
     <body>
         <header>
