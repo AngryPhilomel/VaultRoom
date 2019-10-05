@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
+from django.forms import formset_factory
 
 from .models import Stock, Storages, Products, Done
-from .forms import StockKorrSet, SearchForm
+from .forms import StockKorrSet, SearchForm, PriemkaForm
 
 
 
@@ -63,5 +64,28 @@ def stockKorr(request, product_id):
         formset = StockKorrSet(queryset=Stock.objects.select_related('product','storage').filter(product=product_id))
         context = {'form': formset}
         return render(request, 'vaultroom/stockorr.html', context)
+
+
+def priemka(request):
+    PF = formset_factory(PriemkaForm, extra=10)
+    if request.method == 'POST':
+        formset = PF(request.POST)
+        if formset.is_valid():
+            for form in formset:
+                if form.cleaned_data:
+                    barcode = form.cleaned_data['barcode']
+                    quantity = form.cleaned_data['quantity']
+                    #####
+
+                    #####
+                    return redirect(reverse_lazy('index'))
+                else:
+                    context = {'form': formset}
+                    return render(request, 'vaultroom/stockorr.html', context)
+    else:
+        formset = PF()
+        context = {'form': formset}
+        return render(request, 'vaultroom/stockorr.html', context)
+
 
 
