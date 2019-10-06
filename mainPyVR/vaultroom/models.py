@@ -21,8 +21,8 @@ class Products(models.Model):
     name = models.CharField(max_length=100, verbose_name='Наименование')
     department = models.IntegerField(verbose_name='Номер отдела')
 
-    def __str__(self):
-        return self.name
+   # def __str__(self):
+    #    return self.name
 
     class Meta:
         verbose_name_plural = 'Товар'

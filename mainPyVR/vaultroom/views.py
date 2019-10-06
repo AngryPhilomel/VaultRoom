@@ -73,15 +73,19 @@ def priemka(request):
         if formset.is_valid():
             for form in formset:
                 if form.cleaned_data:
-                    barcode = form.cleaned_data['barcode']
-                    quantity = form.cleaned_data['quantity']
+                    formBarcode = int(form.cleaned_data['barcode'])
+                    quantity = int(form.cleaned_data['quantity'])
                     #####
-
+                    pr = Stock()
+                    pr.storage = Storages.objects.get(name='ВМГТ')
+                    pr.product = Products.objects.get(barcode=formBarcode)
+                    pr.quantity = quantity
+                    pr.save()
                     #####
                     return redirect(reverse_lazy('index'))
-                else:
-                    context = {'form': formset}
-                    return render(request, 'vaultroom/stockorr.html', context)
+        else:
+            context = {'form': formset}
+            return render(request, 'vaultroom/stockorr.html', context)
     else:
         formset = PF()
         context = {'form': formset}
