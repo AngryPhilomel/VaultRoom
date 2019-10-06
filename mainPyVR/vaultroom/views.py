@@ -75,12 +75,24 @@ def priemka(request):
                 if form.cleaned_data:
                     formBarcode = form.cleaned_data['barcode']
                     quantity = form.cleaned_data['quantity']
+                    new = 1
                     #####
-                    pr = Stock()
-                    pr.storage = Storages.objects.get(name='ВМГТ')
-                    pr.product = Products.objects.get(barcode=formBarcode)
-                    pr.quantity = quantity
-                    pr.save()
+                    realStock = Stock.objects.all()
+                    for i in realStock:
+                        if formBarcode == i.product.barcode:
+                            item = i
+                            new = 0
+                            break
+                    if new == 0:
+                        item.quantity = item.quantity + quantity
+                        item.save()
+
+                    else:
+                        pr = Stock()
+                        pr.storage = Storages.objects.get(name='ВМГТ')
+                        pr.product = Products.objects.get(barcode=formBarcode)
+                        pr.quantity = quantity
+                        pr.save()
                     #####
             return redirect(reverse_lazy('index'))
         else:
