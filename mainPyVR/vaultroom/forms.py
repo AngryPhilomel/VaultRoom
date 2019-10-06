@@ -21,11 +21,13 @@ class PriemkaForm(forms.Form):
 				break
 		if ok != 1:
 			raise ValidationError('Товар не найден')
+		return barcode
 
 	def clean_quantity(self):
 		quantity = int(self.cleaned_data['quantity'])
 		if quantity < 1:
 			raise ValidationError('Введите корректное количество')
+		return quantity
 
 
 
