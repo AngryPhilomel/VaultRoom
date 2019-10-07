@@ -1,8 +1,10 @@
 {% extends "layout/stock_view.html" %}
+{% load bootstrap4 %}
 {% block search %}
-<form method="post">
-            {% csrf_token %}
-            {{ form }}
-            <input type="submit", value="Поиск">
-    </form>
+<form class="form-inline my-2 my-lg-0" method="post">
+                         {% csrf_token %}
+                        <div class="form-row mr-sm-4 " type="search" aria-label="Search">
+                            {% bootstrap_form form layout='inline' %}
+                        <button class="btn btn-success my-2 my-sm-0" type="submit">Поиск</button>
+                    </form>
 {% endblock %}

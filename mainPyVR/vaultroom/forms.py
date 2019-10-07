@@ -33,4 +33,16 @@ class PriemkaForm(forms.Form):
 
 
 class SearchForm(forms.Form):
-	keyword = forms.CharField(label='Штрихкод')
+	keyword = forms.IntegerField(label='Штрихкод')
+
+	def clean_keyword(self):
+		ok=0
+		keyword = self.cleaned_data['keyword']
+		valid = Products.objects.all()
+		for i in valid:
+			if keyword == i.barcode:
+				ok = 1
+				break
+		if ok != 1:
+			raise ValidationError('Товар не найден')
+		return keyword

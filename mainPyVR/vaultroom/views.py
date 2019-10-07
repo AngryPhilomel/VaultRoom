@@ -10,12 +10,17 @@ from .forms import StockKorrSet, SearchForm, PriemkaForm
 def index(request):
     if request.method == 'POST':
         sf = SearchForm(request.POST)
+        stc = Stock.objects.select_related('product', 'storage').all()
+        storages = Storages.objects.all()
         if sf.is_valid():
             keyword = sf.cleaned_data['keyword']
             current_product = Products.objects.get(barcode=keyword)
             stc = Stock.objects.select_related('product','storage').filter(product=current_product.id)
-            storages = Storages.objects.all()
             sf = SearchForm()
+            context = {'stc': stc, 'storages': storages, 'form': sf}
+            return render(request, 'vaultroom/index.html', context)
+        else:
+
             context = {'stc': stc, 'storages': storages, 'form': sf}
             return render(request, 'vaultroom/index.html', context)
     else:

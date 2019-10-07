@@ -12,21 +12,39 @@
     </head>
     <body>
         <header>
-            <nav>
-                <table>
-                    <tr>
-                        <td><a href="{% url 'index' %}"><h1>Склад</h1></a></td>
-                        <td><a href="{% url 'done' %}"><h1>Выдано</h1></a></td>
-                        <td><a href="{% url 'priemka' %}"><h1>Приемка</h1></a></td>
-                    </tr>
-                    </table>
-            </nav>
-        </header>
-                <div>
-                {% block search %}
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                        <a class="navbar-brand" href="{% url 'index' %}">VaultRoom</a>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                            <li class="nav-item active">
+                                <td><a class="nav-link" href="{% url 'index' %}">Выдача</a></td>
+                            </li>
+                            <li class="nav-item active">
+                                <td><a class="nav-link" href="{% url 'done' %}">Выдано</a></td>
+                            </li>
+                            <li class="nav-item active">
+                                <td><a class="nav-link" href="{% url 'priemka' %}">Приемка</a></td>
+                            </li>
+                            <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Выбор склада
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                              <a class="dropdown-item" href="{% url 'by_storage' storage_id=1 %}">ВМГТ</a>
+                              <a class="dropdown-item" href="{% url 'by_storage' storage_id=2 %}">Защита</a>
+                              <div class="dropdown-divider"></div>
+                              <a class="dropdown-item" href="{% url 'index' %}">Сток</a>
+                            </div>
+                    </ul>
+                    {% block search %}
 
                 {% endblock %}
-            </div>
+
+                    </div>
+
+            </nav>
+        </header>
+
 
             {% block content %}
             {% endblock %}

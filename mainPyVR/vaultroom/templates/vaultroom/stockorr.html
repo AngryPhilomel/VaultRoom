@@ -1,12 +1,25 @@
 {% extends 'layout/basic.html' %}
 {% load bootstrap4 %}
 
+{% block title%}Коррекция{% endblock %}
+
 {% block content %}
 
 <form method="post">
     {% csrf_token %}
-    {% bootstrap_formset form layout='vertical' size='small' %}
-    {% buttons submit='Сохранить'%}{% endbuttons %}
+    {{ form.management_form }}
+
+        {% for f in form %}
+
+        <div class="form-row" >
+               {% bootstrap_form f layout='vertical' size='md' %}
+        </div>
+
+<hr>
+    {% endfor %}
+
+{% buttons submit='Сохранить'%}{% endbuttons %}
 </form>
 
 {% endblock %}
+

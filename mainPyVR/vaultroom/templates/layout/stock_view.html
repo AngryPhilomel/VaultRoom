@@ -1,14 +1,17 @@
 {% extends "layout/basic.html" %}
 {% block content %}
- <nav>
-            <a href="{% url 'index' %}">Сток</a>
-            {% for storage in storages %}
-            <a href="{% url 'by_storage' storage_id=storage.pk %}">{{ storage.name }}</a>
-               {% endfor %}
- </nav>
 
 
-    <table>
+
+    <table class="table">
+        <tr>
+            <th scope="col">Склад</th>
+             <th scope="col">LM</th>
+             <th scope="col">Артикул</th>
+             <th scope="col">Товар</th>
+             <th scope="col">Остаток</th>
+
+        </tr>
         {% for s in stc %}
         <tr>
             <td>{{ s.storage.name }}</td>
@@ -22,3 +25,4 @@
     </table>
 </section>
 {% endblock %}
+
