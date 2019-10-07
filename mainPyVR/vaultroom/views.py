@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from django.forms import formset_factory
 
 from .models import Stock, Storages, Products, Done
-from .forms import StockKorrSet, SearchForm, PriemkaForm
+from .forms import StockKorrSet, SearchForm, PriemkaForm, VidachaForm
 
 
 
@@ -109,4 +109,35 @@ def priemka(request):
         return render(request, 'vaultroom/stockorr.html', context)
 
 
+def vidacha(request):
+    PF = formset_factory(VidachaForm, extra=5)
+    if request.method == 'POST':
+        formset = PF(request.POST)
+        if formset.is_valid():
+            for form in formset:
+                if form.cleaned_data:
+                    formBarcode = form.cleaned_data['barcode']
+                    quantity = form.cleaned_data['quantity']
+                    #####
+                    realStock = Stock.objects.all()
+                    for i in realStock:
+                        if formBarcode == i.product.barcode:
+                            item = i
+                            break
+                    item.quantity = item.quantity - quantity
+                    item.save()
 
+                    pr = Done()
+                    pr.product = Products.objects.get(barcode=formBarcode)
+                    pr.quantity = quantity
+                    pr.save()
+
+                    #####
+            return redirect(reverse_lazy('index'))
+        else:
+            context = {'form': formset}
+            return render(request, 'vaultroom/stockorr.html', context)
+    else:
+        formset = PF()
+        context = {'form': formset}
+        return render(request, 'vaultroom/stockorr.html', context)

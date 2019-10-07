@@ -30,6 +30,40 @@ class PriemkaForm(forms.Form):
 		return quantity
 
 
+class VidachaForm(forms.Form):
+	barcode = forms.IntegerField(label='Штрихкод')
+	quantity = forms.IntegerField(label='Количество')
+
+	def clean_barcode(self):
+		ok=0
+		barcode = int(self.cleaned_data['barcode'])
+		valid = Stock.objects.all()
+		for i in valid:
+			if barcode == i.product.barcode:
+				ok = 1
+				break
+		if ok != 1:
+			raise ValidationError('Товар не найден')
+		return barcode
+
+	def clean_quantity(self):
+		quantity = int(self.cleaned_data['quantity'])
+		try:
+			barcode = int(self.cleaned_data['barcode'])
+		except:
+			raise ValidationError('Товар не найден')
+		valid = Stock.objects.all()
+
+		for i in valid:
+			if barcode == i.product.barcode:
+				current_quantity = i.quantity
+				break
+
+		if quantity < 1:
+			raise ValidationError('Введите корректное количество')
+		if quantity > current_quantity:
+			raise ValidationError('Недостаточно товара')
+		return quantity
 
 
 class SearchForm(forms.Form):

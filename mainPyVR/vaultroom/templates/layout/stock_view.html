@@ -9,6 +9,7 @@
              <th scope="col">LM</th>
              <th scope="col">Артикул</th>
              <th scope="col">Товар</th>
+            <th scope="col">Отдел</th>
              <th scope="col">Остаток</th>
 
         </tr>
@@ -18,6 +19,7 @@
             <td>{{ s.product.LM }}</td>
             <td>{{ s.product.barcode }}</td>
             <td><a href="{% url 'by_product' product_id=s.product.pk %}">{{ s.product.name }}</a></td>
+            <td>{{ s.product.department }}</td>
             <td>{{ s.quantity }}</td>
             <td><a href="{% url 'stockkorr' product_id=s.product.pk %}">Коррекция</a></td>
         </tr>

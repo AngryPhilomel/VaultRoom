@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.urls import path
 
-from .views import index, by_storage, by_product, done, stockKorr, priemka
+from .views import index, by_storage, by_product, done, stockKorr, priemka, vidacha
 
 urlpatterns = [
     path('', index, name='index'),
@@ -24,4 +24,5 @@ urlpatterns = [
     path('done/', done, name='done'),
     path('stockkorr/<int:product_id>', stockKorr, name='stockkorr'),
     path('priemka/', priemka, name='priemka'),
+    path('vidacha/', vidacha, name='vidacha'),
 ]
