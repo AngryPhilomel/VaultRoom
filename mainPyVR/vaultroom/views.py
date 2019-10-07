@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.forms import formset_factory
+from django.db.models import Q
 
 from .models import Stock, Storages, Products, Done
 from .forms import StockKorrSet, SearchForm, PriemkaForm, VidachaForm
@@ -14,7 +15,8 @@ def index(request):
         storages = Storages.objects.all()
         if sf.is_valid():
             keyword = sf.cleaned_data['keyword']
-            current_product = Products.objects.get(barcode=keyword)
+            q = Q(barcode=keyword) | Q(LM=keyword)
+            current_product = Products.objects.get(q)
             stc = Stock.objects.select_related('product','storage').filter(product=current_product.id)
             sf = SearchForm()
             context = {'stc': stc, 'storages': storages, 'form': sf}

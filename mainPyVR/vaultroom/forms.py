@@ -67,7 +67,7 @@ class VidachaForm(forms.Form):
 
 
 class SearchForm(forms.Form):
-	keyword = forms.IntegerField(label='Штрихкод')
+	keyword = forms.IntegerField(label='Штрихкод\LM')
 
 	def clean_keyword(self):
 		ok=0
@@ -75,6 +75,9 @@ class SearchForm(forms.Form):
 		valid = Products.objects.all()
 		for i in valid:
 			if keyword == i.barcode:
+				ok = 1
+				break
+			elif keyword == i.LM:
 				ok = 1
 				break
 		if ok != 1:
