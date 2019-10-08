@@ -1,0 +1,30 @@
+{% extends "layout/basic.html" %}
+{% load bootstrap4 %}
+{% block title %}Контроль чеков{% endblock %}
+{% block content %}
+
+<form method="post">
+    {% csrf_token %}
+        <div class="form-row" >
+               {% bootstrap_form form layout='vertical' size='md' %}
+
+        </div>
+{% buttons submit='Сохранить'%}{% endbuttons %}
+
+    <table class="table">
+        <tr>
+            <th scope="col">Номер чека</th>
+             <th scope="col">Пост</th>
+             <th scope="col">Коментарий</th>
+             <th scope="col">Дата</th>
+        </tr>
+        {% for c in ctr %}
+        <tr>
+            <td>{{ c.check }}</td>
+            <td>{{ c.post }}</td>
+            <td>{{ c.comment }}</td>
+            <td>{{ c.time }}</td>
+        </tr>
+        {% endfor %}
+
+{% endblock %}

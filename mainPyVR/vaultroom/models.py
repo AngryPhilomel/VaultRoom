@@ -53,3 +53,18 @@ class Done(models.Model):
         verbose_name_plural = 'Выданный товар'
         verbose_name = 'Выданный товар'
         ordering = ['-time']
+
+class Control(models.Model):
+    POSTS = (
+        ('Доставка', 'Доставка'),
+        ('Выдача', 'Выдача'),
+    )
+    check = models.IntegerField(verbose_name='Номер чека', unique=True)
+    post = models.CharField(verbose_name='Пост', choices=POSTS, blank=False, max_length=10)
+    comment = models.CharField(verbose_name='Коментарий', blank=True, max_length=50)
+    time = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name='Время выдачи')
+
+    class Meta:
+        verbose_name_plural = 'Выданные чеки'
+        verbose_name = 'Выданный чек'
+        ordering = ['-time']

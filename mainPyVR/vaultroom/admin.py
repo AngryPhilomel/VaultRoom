@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Storages, Products, Stock, Done
+from .models import Storages, Products, Stock, Done, Control
 
 class StoragesAdmin(admin.ModelAdmin):
     list_display = ('name',)
@@ -23,8 +23,14 @@ class DoneAdmin(admin.ModelAdmin):
     list_display_links = ('product', 'quantity')
     search_fields = ('quantity', 'time')
 
+class ControlAdmin(admin.ModelAdmin):
+    list_display = ('check', 'post', 'comment', 'time')
+    list_display_links = ('post',)
+    search_fields = ('check', 'post', 'time')
+
 admin.site.register(Storages, StoragesAdmin)
 admin.site.register(Products, ProductsAdmin)
 admin.site.register(Stock, StockAdmin)
 admin.site.register(Done, DoneAdmin)
+admin.site.register(Control, ControlAdmin)
 

@@ -1,8 +1,8 @@
-from django.forms import modelformset_factory
+from django.forms import modelformset_factory, modelform_factory
 from django import forms
 from django.core.exceptions import ValidationError
 
-from .models import Stock, Storages, Products
+from .models import Stock, Storages, Products, Control
 
 StockKorrSet = modelformset_factory(Stock, fields=('storage', 'product', 'quantity'),
 								   can_delete=True, extra=0)
@@ -83,3 +83,5 @@ class SearchForm(forms.Form):
 		if ok != 1:
 			raise ValidationError('Товар не найден')
 		return keyword
+
+ControlForm = modelform_factory(Control, fields=('check', 'post', 'comment'))

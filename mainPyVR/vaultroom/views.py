@@ -3,8 +3,8 @@ from django.urls import reverse_lazy
 from django.forms import formset_factory
 from django.db.models import Q
 
-from .models import Stock, Storages, Products, Done
-from .forms import StockKorrSet, SearchForm, PriemkaForm, VidachaForm
+from .models import Stock, Storages, Products, Done, Control
+from .forms import StockKorrSet, SearchForm, PriemkaForm, VidachaForm, ControlForm
 
 
 
@@ -143,3 +143,23 @@ def vidacha(request):
         formset = PF()
         context = {'form': formset}
         return render(request, 'vaultroom/stockorr.html', context)
+
+
+def control(request):
+    if request.method == 'POST':
+        cf = ControlForm(request.POST)
+        ctr = Control.objects.all()
+        if cf.is_valid():
+            cf.save()
+            ctr = Control.objects.all()
+            cf = ControlForm()
+            context = {'ctr': ctr, 'form': cf}
+            return render(request, 'vaultroom/control.html', context)
+        else:
+            context = {'ctr': ctr, 'form': cf}
+            return render(request, 'vaultroom/control.html', context)
+    else:
+        ctr = Control.objects.all()
+        cf = ControlForm()
+        context = {'ctr': ctr, 'form': cf}
+        return render(request, 'vaultroom/control.html', context)
