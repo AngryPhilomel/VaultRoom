@@ -27,6 +27,12 @@ def index(request):
             q = Q(barcode=keyword) | Q(LM=keyword)
             current_product = Products.objects.get(q)
             stc = Stock.objects.select_related('product','storage').filter(product=current_product.id)
+            paginator = Paginator(stc, 30)
+            if 'page' in request.GET:
+                page_num = request.GET['page']
+            else:
+                page_num = 1
+            page = paginator.get_page(page_num)
             sf = SearchForm()
             context = {'stc': page.object_list, 'storages': storages, 'form': sf, 'page': page}
             return render(request, 'vaultroom/index.html', context)
@@ -177,26 +183,36 @@ def vidacha(request):
 
 
 def control(request):
-    ctr = Control.objects.all()
-    paginator = Paginator(ctr, 30)
-    if 'page' in request.GET:
-        page_num = request.GET['page']
-    else:
-        page_num = 1
-    page = paginator.get_page(page_num)
-
     if request.method == 'POST':
         cf = ControlForm(request.POST)
         ctr = Control.objects.all()
+        paginator = Paginator(ctr, 30)
+        if 'page' in request.GET:
+            page_num = request.GET['page']
+        else:
+            page_num = 1
+        page = paginator.get_page(page_num)
         if cf.is_valid():
             cf.save()
             ctr = Control.objects.all()
+            paginator = Paginator(ctr, 30)
+            if 'page' in request.GET:
+                page_num = request.GET['page']
+            else:
+                page_num = 1
+            page = paginator.get_page(page_num)
             cf = ControlForm()
             sf = CheckSearchForm()
             context = {'ctr': page.object_list, 'form': cf, 'checksearchform': sf, 'page': page}
             return render(request, 'vaultroom/control.html', context)
         else:
             ctr = Control.objects.all()
+            paginator = Paginator(ctr, 30)
+            if 'page' in request.GET:
+                page_num = request.GET['page']
+            else:
+                page_num = 1
+            page = paginator.get_page(page_num)
             sf = CheckSearchForm()
             cf = ControlForm(request.POST)
             context = {'ctr': page.object_list, 'form': cf, 'checksearchform': sf, 'page': page}
@@ -206,13 +222,25 @@ def control(request):
         if sf.is_valid():
             keyword = int(sf.cleaned_data['keyword'])
             ctr = Control.objects.filter(check=keyword)
+            paginator = Paginator(ctr, 30)
+            if 'page' in request.GET:
+                page_num = request.GET['page']
+            else:
+                page_num = 1
+            page = paginator.get_page(page_num)
             sf = CheckSearchForm()
             cf = ControlForm()
             context = {'ctr': page.object_list, 'form': cf, 'checksearchform': sf, 'page': page}
             return render(request, 'vaultroom/control.html', context)
         else:
             ctr = Control.objects.all()
+            paginator = Paginator(ctr, 30)
+            if 'page' in request.GET:
+                page_num = request.GET['page']
+            else:
+                page_num = 1
+            page = paginator.get_page(page_num)
             sf = CheckSearchForm(request.GET)
             cf = ControlForm()
-            context = {'ctr': page.object_list, 'form': cf, 'checksearchform': sf}
+            context = {'ctr': page.object_list, 'form': cf, 'checksearchform': sf, 'page': page}
             return render(request, 'vaultroom/control.html', context)
