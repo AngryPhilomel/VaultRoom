@@ -1,6 +1,18 @@
 {% extends "layout/basic.html" %}
 {% load bootstrap4 %}
 {% block title %}Контроль чеков{% endblock %}
+
+{% block search %}
+<form class="form-inline my-2 my-lg-0" method="get">
+                         {% csrf_token %}
+                        <div class="form-row mr-sm-4 " type="search" aria-label="Search">
+                            {% bootstrap_form checksearchform layout='inline' %}
+                        <button class="btn btn-success my-2 my-sm-0" type="submit">Поиск</button>
+                    </form>
+
+{% endblock %}
+
+
 {% block content %}
 
 <form method="post">

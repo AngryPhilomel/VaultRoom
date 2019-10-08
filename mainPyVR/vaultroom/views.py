@@ -4,7 +4,7 @@ from django.forms import formset_factory
 from django.db.models import Q
 
 from .models import Stock, Storages, Products, Done, Control
-from .forms import StockKorrSet, SearchForm, PriemkaForm, VidachaForm, ControlForm
+from .forms import StockKorrSet, SearchForm, PriemkaForm, VidachaForm, ControlForm, CheckSearchForm
 
 
 
@@ -153,13 +153,27 @@ def control(request):
             cf.save()
             ctr = Control.objects.all()
             cf = ControlForm()
-            context = {'ctr': ctr, 'form': cf}
+            sf = CheckSearchForm()
+            context = {'ctr': ctr, 'form': cf, 'checksearchform': sf}
             return render(request, 'vaultroom/control.html', context)
         else:
-            context = {'ctr': ctr, 'form': cf}
+            ctr = Control.objects.all()
+            sf = CheckSearchForm()
+            cf = ControlForm(request.POST)
+            context = {'ctr': ctr, 'form': cf, 'checksearchform': sf}
             return render(request, 'vaultroom/control.html', context)
     else:
-        ctr = Control.objects.all()
-        cf = ControlForm()
-        context = {'ctr': ctr, 'form': cf}
-        return render(request, 'vaultroom/control.html', context)
+        sf = CheckSearchForm(request.GET)
+        if sf.is_valid():
+            keyword = int(sf.cleaned_data['keyword'])
+            ctr = Control.objects.filter(check=keyword)
+            sf = CheckSearchForm()
+            cf = ControlForm()
+            context = {'ctr': ctr, 'form': cf, 'checksearchform': sf}
+            return render(request, 'vaultroom/control.html', context)
+        else:
+            ctr = Control.objects.all()
+            sf = CheckSearchForm(request.GET)
+            cf = ControlForm()
+            context = {'ctr': ctr, 'form': cf, 'checksearchform': sf}
+            return render(request, 'vaultroom/control.html', context)

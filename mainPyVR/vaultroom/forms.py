@@ -85,3 +85,18 @@ class SearchForm(forms.Form):
 		return keyword
 
 ControlForm = modelform_factory(Control, fields=('check', 'post', 'comment'))
+
+class CheckSearchForm(forms.Form):
+	keyword = forms.IntegerField(label='Номер чека')
+
+	def clean_keyword(self):
+		ok=0
+		keyword = self.cleaned_data['keyword']
+		valid = Control.objects.all()
+		for i in valid:
+			if keyword == i.check:
+				ok = 1
+				break
+		if ok != 1:
+			raise ValidationError('Чек не найден')
+		return keyword
