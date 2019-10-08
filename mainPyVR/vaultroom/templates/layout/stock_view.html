@@ -1,8 +1,9 @@
 {% extends "layout/basic.html" %}
 {% block content %}
+{% load bootstrap4 %}
 
 
-
+{% bootstrap_pagination page size='sm' %}
     <table class="table">
         <tr>
             <th scope="col">Склад</th>
@@ -26,5 +27,7 @@
         {% endfor %}
     </table>
 </section>
+
+
 {% endblock %}
 

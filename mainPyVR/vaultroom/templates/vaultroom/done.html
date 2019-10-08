@@ -1,7 +1,9 @@
 {% extends "layout/basic.html" %}
 {% block title %}Выдано{% endblock%}
+{% load bootstrap4 %}
 
 {% block content %}
+{% bootstrap_pagination page size='sm' %}
 <table class="table">
     <tr>
         <th scope="col">Товар</th>
@@ -19,4 +21,5 @@
 
 
 </table>
+
 {% endblock %}
