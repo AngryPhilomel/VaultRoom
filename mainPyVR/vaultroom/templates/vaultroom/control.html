@@ -36,6 +36,7 @@
             <td>{{ c.post }}</td>
             <td>{{ c.comment }}</td>
             <td>{{ c.time }}</td>
+            <td><a href="{% url 'comment' check_id=c.id %}">Изменить</a></td>
         </tr>
         {% endfor %}
 {% bootstrap_pagination page size='sm' %}

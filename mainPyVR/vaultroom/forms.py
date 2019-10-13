@@ -100,3 +100,5 @@ class CheckSearchForm(forms.Form):
 		if ok != 1:
 			raise ValidationError('Чек не найден')
 		return keyword
+
+CommentForm = modelform_factory(Control, fields=('comment',))

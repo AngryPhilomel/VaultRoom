@@ -5,7 +5,7 @@ from django.db.models import Q
 from django.core.paginator import Paginator
 
 from .models import Stock, Storages, Products, Done, Control
-from .forms import StockKorrSet, SearchForm, PriemkaForm, VidachaForm, ControlForm, CheckSearchForm
+from .forms import StockKorrSet, SearchForm, PriemkaForm, VidachaForm, ControlForm, CheckSearchForm, CommentForm
 
 
 
@@ -244,3 +244,20 @@ def control(request):
             cf = ControlForm()
             context = {'ctr': page.object_list, 'form': cf, 'checksearchform': sf, 'page': page}
             return render(request, 'vaultroom/control.html', context)
+
+
+def comment(request, check_id):
+    if request.method == 'POST':
+        ctr = Control.objects.get(id=check_id)
+        form = CommentForm(request.POST, instance=ctr)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse_lazy('control'))
+        else:
+            context = {'form': form}
+            return render(request, 'vaultroom/comment.html', context)
+    else:
+        ctr = Control.objects.get(id=check_id)
+        form = CommentForm(instance=ctr)
+        context = {'form': form}
+        return render(request, 'vaultroom/comment.html', context)

@@ -1,0 +1,18 @@
+{% extends 'layout/basic.html' %}
+{% load bootstrap4 %}
+
+{% block title%}Комментарий{% endblock %}
+
+{% block content %}
+
+<form method="post">
+    {% csrf_token %}
+        <div class="form-row" >
+               {% bootstrap_form form layout='vertical' size='md' %}
+        </div>
+
+
+{% buttons submit='Сохранить'%}{% endbuttons %}
+</form>
+
+{% endblock %}
