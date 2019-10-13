@@ -19,6 +19,9 @@ class PriemkaForm(forms.Form):
 			if barcode == i.barcode:
 				ok = 1
 				break
+			if barcode == i.LM:
+				ok = 1
+				break
 		if ok != 1:
 			raise ValidationError('Товар не найден')
 		return barcode

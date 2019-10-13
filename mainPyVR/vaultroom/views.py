@@ -127,6 +127,11 @@ def priemka(request):
                             item = i
                             new = 0
                             break
+                        elif formBarcode == i.product.LM:
+                            item = i
+                            new = 0
+                            break
+
                     if new == 0:
                         item.quantity = item.quantity + quantity
                         item.save()
@@ -134,7 +139,8 @@ def priemka(request):
                     else:
                         pr = Stock()
                         pr.storage = Storages.objects.get(name='ВМГТ')
-                        pr.product = Products.objects.get(barcode=formBarcode)
+                        q = Q(barcode=formBarcode) | Q(LM=formBarcode)
+                        pr.product = Products.objects.get(q)
                         pr.quantity = quantity
                         pr.save()
                     #####
