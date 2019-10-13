@@ -201,7 +201,9 @@ def control(request):
             else:
                 page_num = 1
             page = paginator.get_page(page_num)
-            cf = ControlForm()
+            post = cf.cleaned_data['post']
+            cf = ControlForm(initial={'post': post })
+            cf.fields['check'].widget.attrs['autofocus'] = 'on'
             sf = CheckSearchForm()
             context = {'ctr': page.object_list, 'form': cf, 'checksearchform': sf, 'page': page}
             return render(request, 'vaultroom/control.html', context)
@@ -242,6 +244,7 @@ def control(request):
             page = paginator.get_page(page_num)
             sf = CheckSearchForm(request.GET)
             cf = ControlForm()
+            cf.fields['check'].widget.attrs['autofocus'] = 'on'
             context = {'ctr': page.object_list, 'form': cf, 'checksearchform': sf, 'page': page}
             return render(request, 'vaultroom/control.html', context)
 
