@@ -87,7 +87,7 @@ class SearchForm(forms.Form):
 			raise ValidationError('Товар не найден')
 		return keyword
 
-ControlForm = modelform_factory(Control, fields=('check', 'post', 'comment'))
+ControlForm = modelform_factory(Control, fields=('check', 'post', 'comment', 'pallet'))
 
 class CheckSearchForm(forms.Form):
 	keyword = forms.IntegerField(label='Номер чека')

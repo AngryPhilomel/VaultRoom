@@ -28,6 +28,7 @@
             <th scope="col">Номер чека</th>
              <th scope="col">Пост</th>
              <th scope="col">Коментарий</th>
+            <th scope="col">Кол-во паллет</th>
              <th scope="col">Дата</th>
         </tr>
         {% for c in ctr %}
@@ -35,6 +36,7 @@
             <td>{{ c.check }}</td>
             <td>{{ c.post }}</td>
             <td>{{ c.comment }}</td>
+            <td>{{ c.pallet }}</td>
             <td>{{ c.time }}</td>
             <td><a href="{% url 'comment' check_id=c.id %}">Изменить</a></td>
         </tr>
