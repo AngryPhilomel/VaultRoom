@@ -14,8 +14,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path
+from django.views.generic.dates import DayArchiveView
 
-from .views import index, by_storage, by_product, done, stockKorr, priemka, vidacha, control, comment
+from .models import Control, Done
+from .views import index, by_storage, by_product, done, stockKorr, priemka, vidacha, control, comment, dateDone, dateControl
+
+
 
 urlpatterns = [
     path('', index, name='index'),
@@ -27,4 +31,9 @@ urlpatterns = [
     path('vidacha/', vidacha, name='vidacha'),
     path('control/', control, name='control'),
     path('comment/<int:check_id>', comment, name='comment'),
+	path('control/<int:year>/<int:month>/<int:day>/', DayArchiveView.as_view(model=Control, date_field='time', month_format='%m')),
+	path('control/date/', dateControl, name='date_control'),
+    path('done/<int:year>/<int:month>/<int:day>/', DayArchiveView.as_view(model=Done, date_field='time', month_format='%m')),
+    path('done/date/', dateDone, name='date_done'),
+
 ]

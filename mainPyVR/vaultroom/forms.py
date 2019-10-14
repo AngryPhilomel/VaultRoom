@@ -105,3 +105,7 @@ class CheckSearchForm(forms.Form):
 		return keyword
 
 CommentForm = modelform_factory(Control, fields=('comment',))
+
+
+class DateSearchForm(forms.Form):
+	date = forms.DateField(widget=forms.SelectDateWidget())

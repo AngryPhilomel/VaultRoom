@@ -2,6 +2,12 @@
 {% block title %}Выдано{% endblock%}
 {% load bootstrap4 %}
 
+{% block searchdate %}
+<li class="nav-item active">
+    <td><a class="nav-link" href="{% url 'date_done' %}">Поиск по дате</a></td>
+    </li>
+{% endblock %}
+
 {% block content %}
 {% bootstrap_pagination page size='sm' %}
 <table class="table">

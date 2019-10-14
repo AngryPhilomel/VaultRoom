@@ -5,7 +5,7 @@ from django.db.models import Q
 from django.core.paginator import Paginator
 
 from .models import Stock, Storages, Products, Done, Control
-from .forms import StockKorrSet, SearchForm, PriemkaForm, VidachaForm, ControlForm, CheckSearchForm, CommentForm
+from .forms import StockKorrSet, SearchForm, PriemkaForm, VidachaForm, ControlForm, CheckSearchForm, CommentForm, DateSearchForm
 
 
 
@@ -270,3 +270,40 @@ def comment(request, check_id):
         form = CommentForm(instance=ctr)
         context = {'form': form}
         return render(request, 'vaultroom/comment.html', context)
+
+def dateDone(request):
+	if request.method == 'POST':
+		df = DateSearchForm(request.POST)
+		day = request.POST['date_day']
+		month = request.POST['date_month']
+		year = request.POST['date_year']
+		if df.is_valid():
+			return redirect('/done/{}/{}/{}/'.format(year, month, day))
+		else:
+			df = DateSearchForm()
+			context = {'df': df}
+			return render(request, 'vaultroom/datesearch.html', context)
+
+	else:
+		df = DateSearchForm()
+		context = {'df':df}
+		return render(request, 'vaultroom/datesearch.html', context)
+
+
+def dateControl(request):
+	if request.method == 'POST':
+		df = DateSearchForm(request.POST)
+		day = request.POST['date_day']
+		month = request.POST['date_month']
+		year = request.POST['date_year']
+		if df.is_valid():
+			return redirect('/control/{}/{}/{}/'.format(year, month, day))
+		else:
+			df = DateSearchForm()
+			context = {'df': df}
+			return render(request, 'vaultroom/datesearch.html', context)
+
+	else:
+		df = DateSearchForm()
+		context = {'df':df}
+		return render(request, 'vaultroom/datesearch.html', context)

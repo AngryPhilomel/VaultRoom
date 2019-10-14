@@ -39,6 +39,9 @@
                               <div class="dropdown-divider"></div>
                               <a class="dropdown-item" href="{% url 'index' %}">Сток</a>
                             </div>
+                        {% block searchdate %}
+
+                        {% endblock %}
                     </ul>
                     {% block search %}
 

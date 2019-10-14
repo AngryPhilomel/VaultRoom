@@ -1,0 +1,16 @@
+{% extends 'layout/basic.html' %}
+{% load bootstrap4 %}
+
+{% block title%}Поиск по дате{% endblock %}
+
+{% block content %}
+
+<form method="post">
+    {% csrf_token %}
+    {% bootstrap_form df layout='inline' size='md'%}
+
+
+{% buttons submit='Поиск'%}{% endbuttons %}
+</form>
+
+{% endblock %}

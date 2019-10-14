@@ -2,6 +2,12 @@
 {% load bootstrap4 %}
 {% block title %}Контроль чеков{% endblock %}
 
+{% block searchdate %}
+<li class="nav-item active">
+    <td><a class="nav-link" href="{% url 'date_control' %}">Поиск по дате</a></td>
+    </li>
+{% endblock %}
+
 {% block search %}
 <form class="form-inline my-2 my-lg-0" method="get">
                          {% csrf_token %}
