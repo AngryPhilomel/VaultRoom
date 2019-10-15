@@ -164,11 +164,16 @@ def vidacha(request):
                     formBarcode = form.cleaned_data['barcode']
                     quantity = form.cleaned_data['quantity']
                     #####
-                    realStock = Stock.objects.all()
+                    realStock = Stock.objects.select_related('product').all()
                     for i in realStock:
                         if formBarcode == i.product.barcode:
                             item = i
                             break
+                        if formBarcode == i.product.LM:
+                            item = i
+                            formBarcode = i.product.barcode
+                            break
+
                     item.quantity = item.quantity - quantity
                     item.save()
 

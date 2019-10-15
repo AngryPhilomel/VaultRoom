@@ -8,7 +8,7 @@ StockKorrSet = modelformset_factory(Stock, fields=('storage', 'product', 'quanti
 								   can_delete=True, extra=0)
 
 class PriemkaForm(forms.Form):
-	barcode = forms.IntegerField(label='Штрихкод')
+	barcode = forms.IntegerField(label='Штрихкод\LM')
 	quantity = forms.IntegerField(label='Количество')
 
 	def clean_barcode(self):
@@ -34,15 +34,18 @@ class PriemkaForm(forms.Form):
 
 
 class VidachaForm(forms.Form):
-	barcode = forms.IntegerField(label='Штрихкод')
+	barcode = forms.IntegerField(label='Штрихкод\LM')
 	quantity = forms.IntegerField(label='Количество')
 
 	def clean_barcode(self):
 		ok=0
 		barcode = int(self.cleaned_data['barcode'])
-		valid = Stock.objects.all()
+		valid = Stock.objects.select_related('product').all()
 		for i in valid:
 			if barcode == i.product.barcode:
+				ok = 1
+				break
+			if barcode == i.product.LM:
 				ok = 1
 				break
 		if ok != 1:
@@ -55,10 +58,13 @@ class VidachaForm(forms.Form):
 			barcode = int(self.cleaned_data['barcode'])
 		except:
 			raise ValidationError('Товар не найден')
-		valid = Stock.objects.all()
+		valid = Stock.objects.select_related('product').all()
 
 		for i in valid:
 			if barcode == i.product.barcode:
+				current_quantity = i.quantity
+				break
+			if barcode == i.product.LM:
 				current_quantity = i.quantity
 				break
 
@@ -104,7 +110,7 @@ class CheckSearchForm(forms.Form):
 			raise ValidationError('Чек не найден')
 		return keyword
 
-CommentForm = modelform_factory(Control, fields=('comment',))
+CommentForm = modelform_factory(Control, fields=('check', 'post', 'comment', 'pallet'))
 
 
 class DateSearchForm(forms.Form):
