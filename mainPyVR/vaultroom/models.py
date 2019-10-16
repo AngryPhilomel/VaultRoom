@@ -61,7 +61,7 @@ class Control(models.Model):
     )
     check = models.IntegerField(verbose_name='Номер чека', unique=True)
     post = models.CharField(verbose_name='Пост', choices=POSTS, blank=False, max_length=10)
-    comment = models.CharField(verbose_name='Коментарий', blank=True, max_length=50)
+    comment = models.TextField(verbose_name='Коментарий', blank=True, max_length=500)
     pallet = models.IntegerField(verbose_name='Кол-во паллет', default=0)
     time = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name='Время выдачи')
 

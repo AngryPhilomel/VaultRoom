@@ -215,6 +215,7 @@ def control(request):
             post = cf.cleaned_data['post']
             cf = ControlForm(initial={'post': post })
             cf.fields['check'].widget.attrs['autofocus'] = 'on'
+            cf.fields['comment'].widget.attrs['rows'] = 3
             sf = CheckSearchForm()
             context = {'ctr': page.object_list, 'form': cf, 'checksearchform': sf, 'page': page}
             return render(request, 'vaultroom/control.html', context)
@@ -256,6 +257,7 @@ def control(request):
             sf = CheckSearchForm(request.GET)
             cf = ControlForm()
             cf.fields['check'].widget.attrs['autofocus'] = 'on'
+            cf.fields['comment'].widget.attrs['rows'] = 3
             context = {'ctr': page.object_list, 'form': cf, 'checksearchform': sf, 'page': page}
             return render(request, 'vaultroom/control.html', context)
 
