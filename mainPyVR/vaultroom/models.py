@@ -46,6 +46,7 @@ class Stock(models.Model):
 
 class Done(models.Model):
     product = models.ForeignKey('Products', on_delete=models.PROTECT, verbose_name='Выданный товар')
+    storage = models.ForeignKey('Storages', on_delete=models.PROTECT, verbose_name='Склад')
     quantity = models.IntegerField(verbose_name='Количество выданного товара')
     time = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name='Время выдачи')
 

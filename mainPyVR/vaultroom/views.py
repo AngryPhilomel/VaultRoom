@@ -84,7 +84,7 @@ def by_product(request, product_id):
 
 
 def done(request):
-    done = Done.objects.select_related('product').order_by('-time')
+    done = Done.objects.select_related('product', 'storage').order_by('-time')
     paginator = Paginator(done, 30)
     if 'page' in request.GET:
         page_num = request.GET['page']
@@ -110,8 +110,9 @@ def stockKorr(request, product_id):
         return render(request, 'vaultroom/stockorr.html', context)
 
 
-def priemka(request):
+def priemka(request, storage_id):
     PF = formset_factory(PriemkaForm, extra=10)
+    current_storage = Storages.objects.get(pk=storage_id)
     if request.method == 'POST':
         formset = PF(request.POST)
         if formset.is_valid():
@@ -121,7 +122,7 @@ def priemka(request):
                     quantity = form.cleaned_data['quantity']
                     new = 1
                     #####
-                    realStock = Stock.objects.all()
+                    realStock = Stock.objects.filter(storage=current_storage)
                     for i in realStock:
                         if formBarcode == i.product.barcode:
                             item = i
@@ -138,7 +139,7 @@ def priemka(request):
 
                     else:
                         pr = Stock()
-                        pr.storage = Storages.objects.get(name='ВМГТ')
+                        pr.storage = current_storage
                         q = Q(barcode=formBarcode) | Q(LM=formBarcode)
                         pr.product = Products.objects.get(q)
                         pr.quantity = quantity
@@ -146,11 +147,11 @@ def priemka(request):
                     #####
             return redirect(reverse_lazy('index'))
         else:
-            context = {'form': formset}
+            context = {'form': formset, 'current_storage': current_storage}
             return render(request, 'vaultroom/stockorr.html', context)
     else:
         formset = PF()
-        context = {'form': formset}
+        context = {'form': formset, 'current_storage': current_storage}
         return render(request, 'vaultroom/stockorr.html', context)
 
 

@@ -13,6 +13,7 @@
 <table class="table">
     <tr>
         <th scope="col">Товар</th>
+        <th scope="col">Склад</th>
         <th scope="col">Количество</th>
         <th scope="col">Дата</th>
 
@@ -20,6 +21,7 @@
     {% for d in done %}
         <tr>
             <td>{{ d.product.name }}</td>
+            <td>{{ d.storage.name }}</td>
             <td>{{ d.quantity }}</td>
             <td>{{ d.time }}</td>
         </tr>
