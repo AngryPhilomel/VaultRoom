@@ -15,17 +15,16 @@
         <header>
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
                         <a class="navbar-brand" href="{% url 'index' %}">VaultRoom</a>
+                        {% block storage %} {% endblock %}
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mr-auto">
                             <li class="nav-item active">
-                                <td><a class="nav-link" href="{% url 'vidacha' %}">Списание</a></td>
-                            </li>
-                            <li class="nav-item active">
                                 <td><a class="nav-link" href="{% url 'done' %}">Выдано</a></td>
                             </li>
-                            <li class="nav-item active">
-                                <td><a class="nav-link" href="{% url 'priemka' %}">Добавление</a></td>
-                            </li>
+                            {% block control %}
+
+                        {% endblock %}
+
                             <li class="nav-item active">
                                 <td><a class="nav-link" href="{% url 'control' %}">Контроль чеков</a></td>
                             </li>
