@@ -330,9 +330,60 @@ def to(request, storage_id, storage_to):
 	storages = Storages.objects.all()
 	TF = formset_factory(to_Form, extra=5)
 	if request.method == 'POST':
-		pass
+		formset = TF(request.POST, form_kwargs={'storage': storage_id})
+		if formset.is_valid():
+			for form in formset:
+				if form.cleaned_data:
+					formBarcode = form.cleaned_data['barcode']
+					quantity = form.cleaned_data['quantity']
+					#####
+
+					realStock = Stock.objects.select_related('product').filter(storage=current_storage)
+					toStock = Stock.objects.select_related('product').filter(storage=to_storage)
+					new = 1
+					for i in realStock:
+						if formBarcode == i.product.barcode:
+							item = i
+							break
+						if formBarcode == i.product.LM:
+							item = i
+							formBarcode = i.product.barcode
+							break
+
+					item.quantity = item.quantity - quantity
+					item.save()
+
+						######################
+					for i in toStock:
+						if formBarcode == i.product.barcode:
+							toitem = i
+							new = 0
+							break
+						elif formBarcode == i.product.LM:
+							toitem = i
+							new = 0
+							break
+
+					if new == 0:
+						toitem.quantity = toitem.quantity + quantity
+						toitem.save()
+
+					else:
+						pr = Stock()
+						pr.storage = to_storage
+						q = Q(barcode=formBarcode) | Q(LM=formBarcode)
+						pr.product = Products.objects.get(q)
+						pr.quantity = quantity
+						pr.save()
+						######################
+
+					return redirect('/storage/{}'.format(storage_id))
+		else:
+			do = 'Списание'
+			context = {'form': formset, 'current_storage': current_storage, 'do': do}
+			return render(request, 'vaultroom/stockorr.html', context)
 	else:
 		do = '-> {}'.format(to_storage.name)
-		formset = TF()
+		formset = TF(form_kwargs={'storage': storage_id})
 		context={'form': formset, 'storages': storages, 'current_storage': current_storage, 'do': do}
 		return render(request, 'vaultroom/stockorr.html', context)

@@ -126,3 +126,46 @@ class DateSearchForm(forms.Form):
 class to_Form(forms.Form):
 	barcode = forms.IntegerField(label='Штрихкод\LM')
 	quantity = forms.IntegerField(label='Количество')
+
+	def __init__(self, *args, **kwargs):
+		storage = kwargs.pop('storage')
+		super(to_Form, self).__init__(*args, **kwargs)
+		self.storage = storage
+
+	def clean_barcode(self):
+		ok=0
+		barcode = int(self.cleaned_data['barcode'])
+		current_storage = Storages.objects.get(id=self.storage)
+		valid = Stock.objects.select_related('product').filter(storage=current_storage)
+		for i in valid:
+			if barcode == i.product.barcode:
+				ok = 1
+				break
+			if barcode == i.product.LM:
+				ok = 1
+				break
+		if ok != 1:
+			raise ValidationError('Товар не найден')
+		return barcode
+
+	def clean_quantity(self):
+		quantity = int(self.cleaned_data['quantity'])
+		try:
+			barcode = int(self.cleaned_data['barcode'])
+		except:
+			raise ValidationError('Товар не найден')
+		valid = Stock.objects.select_related('product').filter(storage=self.storage)
+
+		for i in valid:
+			if barcode == i.product.barcode:
+				current_quantity = i.quantity
+				break
+			if barcode == i.product.LM:
+				current_quantity = i.quantity
+				break
+
+		if quantity < 1:
+			raise ValidationError('Введите корректное количество')
+		if quantity > current_quantity:
+			raise ValidationError('Недостаточно товара')
+		return quantity
