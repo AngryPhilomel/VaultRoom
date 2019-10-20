@@ -1,4 +1,4 @@
-from django.forms import modelformset_factory, modelform_factory
+from django.forms import modelformset_factory, modelform_factory, BaseFormSet
 from django import forms
 from django.core.exceptions import ValidationError
 
@@ -37,10 +37,16 @@ class VidachaForm(forms.Form):
 	barcode = forms.IntegerField(label='Штрихкод\LM')
 	quantity = forms.IntegerField(label='Количество')
 
+	def __init__(self, *args, **kwargs):
+		storage = kwargs.pop('storage')
+		super(VidachaForm, self).__init__(*args, **kwargs)
+		self.storage = storage
+
 	def clean_barcode(self):
 		ok=0
 		barcode = int(self.cleaned_data['barcode'])
-		valid = Stock.objects.select_related('product').all()
+		current_storage = Storages.objects.get(id=self.storage)
+		valid = Stock.objects.select_related('product').filter(storage=current_storage)
 		for i in valid:
 			if barcode == i.product.barcode:
 				ok = 1
@@ -58,7 +64,7 @@ class VidachaForm(forms.Form):
 			barcode = int(self.cleaned_data['barcode'])
 		except:
 			raise ValidationError('Товар не найден')
-		valid = Stock.objects.select_related('product').all()
+		valid = Stock.objects.select_related('product').filter(storage=self.storage)
 
 		for i in valid:
 			if barcode == i.product.barcode:

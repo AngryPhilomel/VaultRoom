@@ -28,7 +28,7 @@ urlpatterns = [
     path('done/', done, name='done'),
     path('stockkorr/<int:product_id>', stockKorr, name='stockkorr'),
     path('priemka/<int:storage_id>/', priemka, name='priemka'),
-    path('vidacha/', vidacha, name='vidacha'),
+    path('vidacha/<int:storage_id>/', vidacha, name='vidacha'),
     path('control/', control, name='control'),
     path('comment/<int:check_id>', comment, name='comment'),
 	path('control/<int:year>/<int:month>/<int:day>/', DayArchiveView.as_view(model=Control, date_field='time', month_format='%m')),

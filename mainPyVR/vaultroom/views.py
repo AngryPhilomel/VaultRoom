@@ -145,7 +145,7 @@ def priemka(request, storage_id):
                         pr.quantity = quantity
                         pr.save()
                     #####
-            return redirect(reverse_lazy('index'))
+            return redirect('/storage/{}'.format(storage_id))
         else:
             context = {'form': formset, 'current_storage': current_storage}
             return render(request, 'vaultroom/stockorr.html', context)
@@ -155,17 +155,19 @@ def priemka(request, storage_id):
         return render(request, 'vaultroom/stockorr.html', context)
 
 
-def vidacha(request):
+def vidacha(request, storage_id):
+    current_storage = Storages.objects.get(pk=storage_id)
     PF = formset_factory(VidachaForm, extra=5)
     if request.method == 'POST':
-        formset = PF(request.POST)
+        formset = PF(request.POST, form_kwargs={'storage': storage_id})
         if formset.is_valid():
             for form in formset:
                 if form.cleaned_data:
                     formBarcode = form.cleaned_data['barcode']
                     quantity = form.cleaned_data['quantity']
                     #####
-                    realStock = Stock.objects.select_related('product').all()
+
+                    realStock = Stock.objects.select_related('product').filter(storage=current_storage)
                     for i in realStock:
                         if formBarcode == i.product.barcode:
                             item = i
@@ -180,17 +182,18 @@ def vidacha(request):
 
                     pr = Done()
                     pr.product = Products.objects.get(barcode=formBarcode)
+                    pr.storage = current_storage
                     pr.quantity = quantity
                     pr.save()
 
                     #####
-            return redirect(reverse_lazy('index'))
+            return redirect('/storage/{}'.format(storage_id))
         else:
-            context = {'form': formset}
+            context = {'form': formset, 'current_storage': current_storage}
             return render(request, 'vaultroom/stockorr.html', context)
     else:
-        formset = PF()
-        context = {'form': formset}
+        formset = PF(form_kwargs={'storage': storage_id})
+        context = {'form': formset, 'current_storage': current_storage}
         return render(request, 'vaultroom/stockorr.html', context)
 
 
