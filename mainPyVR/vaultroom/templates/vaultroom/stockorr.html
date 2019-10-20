@@ -1,9 +1,12 @@
 {% extends 'layout/basic.html' %}
 {% load bootstrap4 %}
 
-{% block title%}Коррекция{% endblock %}
-{% block storage %} <a class="navbar-brand" href="{% url 'index' %}">{{ current_storage.name }}</a> {% endblock %}
+{% block title %}{% endblock %}
+{% block storage %} <a class="navbar-brand" href="{% url 'by_storage' storage_id=current_storage.id %}">{{ current_storage.name }}</a> {% endblock %}
+{% block control %} <a class="navbar-brand" href="">{{ do }}</a>{% endblock %}
 {% block content %}
+
+
 
 <form method="post">
     {% csrf_token %}

@@ -5,7 +5,7 @@ from django.db.models import Q
 from django.core.paginator import Paginator
 
 from .models import Stock, Storages, Products, Done, Control
-from .forms import StockKorrSet, SearchForm, PriemkaForm, VidachaForm, ControlForm, CheckSearchForm, CommentForm, DateSearchForm
+from .forms import StockKorrSet, SearchForm, PriemkaForm, VidachaForm, ControlForm, CheckSearchForm, CommentForm, DateSearchForm, to_Form
 
 
 
@@ -85,13 +85,14 @@ def by_product(request, product_id):
 
 def done(request):
     done = Done.objects.select_related('product', 'storage').order_by('-time')
+    storages = Storages.objects.all()
     paginator = Paginator(done, 30)
     if 'page' in request.GET:
         page_num = request.GET['page']
     else:
         page_num = 1
     page = paginator.get_page(page_num)
-    context = {'done': page.object_list, 'page': page}
+    context = {'done': page.object_list, 'page': page, 'storages': storages}
     return render(request, 'vaultroom/done.html', context)
 
 
@@ -147,11 +148,13 @@ def priemka(request, storage_id):
                     #####
             return redirect('/storage/{}'.format(storage_id))
         else:
-            context = {'form': formset, 'current_storage': current_storage}
+            do = 'Добавление'
+            context = {'form': formset, 'current_storage': current_storage, 'do': do}
             return render(request, 'vaultroom/stockorr.html', context)
     else:
         formset = PF()
-        context = {'form': formset, 'current_storage': current_storage}
+        do = 'Добавление'
+        context = {'form': formset, 'current_storage': current_storage, 'do': do}
         return render(request, 'vaultroom/stockorr.html', context)
 
 
@@ -189,11 +192,13 @@ def vidacha(request, storage_id):
                     #####
             return redirect('/storage/{}'.format(storage_id))
         else:
-            context = {'form': formset, 'current_storage': current_storage}
+            do = 'Списание'
+            context = {'form': formset, 'current_storage': current_storage, 'do': do}
             return render(request, 'vaultroom/stockorr.html', context)
     else:
+        do = 'Списание'
         formset = PF(form_kwargs={'storage': storage_id})
-        context = {'form': formset, 'current_storage': current_storage}
+        context = {'form': formset, 'current_storage': current_storage, 'do': do}
         return render(request, 'vaultroom/stockorr.html', context)
 
 
@@ -318,3 +323,16 @@ def dateControl(request):
 		df = DateSearchForm()
 		context = {'df':df}
 		return render(request, 'vaultroom/datesearch.html', context)
+
+def to(request, storage_id, storage_to):
+	current_storage = Storages.objects.get(id=storage_id)
+	to_storage = Storages.objects.get(id=storage_to)
+	storages = Storages.objects.all()
+	TF = formset_factory(to_Form, extra=5)
+	if request.method == 'POST':
+		pass
+	else:
+		do = '-> {}'.format(to_storage.name)
+		formset = TF()
+		context={'form': formset, 'storages': storages, 'current_storage': current_storage, 'do': do}
+		return render(request, 'vaultroom/stockorr.html', context)

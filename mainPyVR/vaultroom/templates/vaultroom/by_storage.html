@@ -11,13 +11,28 @@
                             <li class="nav-item active">
                                 <td><a class="nav-link" href="{% url 'priemka' storage_id=current_storage.pk %}">Добавление</a></td>
                             </li>
+
+                            <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Перемещение на
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                               {% for to in storages %}
+                                    {% if to == current_storage %}
+                                    {% else %}
+                                    <a class="dropdown-item" href="{% url 'to' storage_id=current_storage.id storage_to=to.id %}">{{ to.name }}</a>
+                                    {% endif %}
+                              {% endfor %}
+
+
                             <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                               Выбор склада
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                              <a class="dropdown-item" href="{% url 'by_storage' storage_id=1 %}">ВМГТ</a>
-                              <a class="dropdown-item" href="{% url 'by_storage' storage_id=2 %}">Защита</a>
+                                {% for storage in storages %}
+                              <a class="dropdown-item" href="{% url 'by_storage' storage_id=storage.id %}">{{ storage.name }}</a>
+                              {% endfor %}
                               <div class="dropdown-divider"></div>
                               <a class="dropdown-item" href="{% url 'index' %}">Сток</a>
                             </div>

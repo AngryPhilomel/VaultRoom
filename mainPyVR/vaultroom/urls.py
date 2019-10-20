@@ -17,12 +17,13 @@ from django.urls import path
 from django.views.generic.dates import DayArchiveView
 
 from .models import Control, Done
-from .views import index, by_storage, by_product, done, stockKorr, priemka, vidacha, control, comment, dateDone, dateControl
+from .views import index, by_storage, by_product, done, stockKorr, priemka, vidacha, control, comment, dateDone, dateControl, to
 
 
 
 urlpatterns = [
     path('', index, name='index'),
+	path('storage/<int:storage_id>/to/<int:storage_to>', to, name='to'),
     path('storage/<int:storage_id>', by_storage, name='by_storage'),
     path('product/<int:product_id>', by_product, name='by_product'),
     path('done/', done, name='done'),
@@ -35,5 +36,7 @@ urlpatterns = [
 	path('control/date/', dateControl, name='date_control'),
     path('done/<int:year>/<int:month>/<int:day>/', DayArchiveView.as_view(model=Done, date_field='time', month_format='%m')),
     path('done/date/', dateDone, name='date_done'),
+
+
 
 ]

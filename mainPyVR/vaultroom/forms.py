@@ -121,3 +121,8 @@ CommentForm = modelform_factory(Control, fields=('check', 'post', 'comment', 'pa
 
 class DateSearchForm(forms.Form):
 	date = forms.DateField(widget=forms.SelectDateWidget())
+
+
+class to_Form(forms.Form):
+	barcode = forms.IntegerField(label='Штрихкод\LM')
+	quantity = forms.IntegerField(label='Количество')

@@ -28,8 +28,9 @@
                               Выбор склада
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                              <a class="dropdown-item" href="{% url 'by_storage' storage_id=1 %}">ВМГТ</a>
-                              <a class="dropdown-item" href="{% url 'by_storage' storage_id=2 %}">Защита</a>
+                              {% for storage in storages %}
+                              <a class="dropdown-item" href="{% url 'by_storage' storage_id=storage.id %}">{{ storage.name }}</a>
+                              {% endfor %}
                               <div class="dropdown-divider"></div>
                               <a class="dropdown-item" href="{% url 'index' %}">Сток</a>
                             </div>
