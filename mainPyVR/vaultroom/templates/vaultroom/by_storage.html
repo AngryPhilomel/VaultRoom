@@ -2,10 +2,23 @@
 {% block title %}{{ current_storage.name }}{% endblock %}
 {% block storage %} <a class="navbar-brand" href="{% url 'index' %}">{{ current_storage.name }}</a> {% endblock %}
 {% block control %}
+                            <li class="nav-item active">
+                                <td><a class="nav-link" href="{% url 'done' %}">Выдано</a></td>
+                            </li>
                            <li class="nav-item active">
                                 <td><a class="nav-link" href="{% url 'vidacha' storage_id=current_storage.pk %}">Списание</a></td>
                             </li>
                             <li class="nav-item active">
                                 <td><a class="nav-link" href="{% url 'priemka' storage_id=current_storage.pk %}">Добавление</a></td>
                             </li>
+                            <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Выбор склада
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                              <a class="dropdown-item" href="{% url 'by_storage' storage_id=1 %}">ВМГТ</a>
+                              <a class="dropdown-item" href="{% url 'by_storage' storage_id=2 %}">Защита</a>
+                              <div class="dropdown-divider"></div>
+                              <a class="dropdown-item" href="{% url 'index' %}">Сток</a>
+                            </div>
 {% endblock %}

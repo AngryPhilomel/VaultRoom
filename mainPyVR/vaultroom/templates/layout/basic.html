@@ -18,13 +18,8 @@
                         {% block storage %} {% endblock %}
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mr-auto">
-                            <li class="nav-item active">
-                                <td><a class="nav-link" href="{% url 'done' %}">Выдано</a></td>
-                            </li>
+
                             {% block control %}
-
-                        {% endblock %}
-
                             <li class="nav-item active">
                                 <td><a class="nav-link" href="{% url 'control' %}">Контроль чеков</a></td>
                             </li>
@@ -38,9 +33,9 @@
                               <div class="dropdown-divider"></div>
                               <a class="dropdown-item" href="{% url 'index' %}">Сток</a>
                             </div>
-                        {% block searchdate %}
-
                         {% endblock %}
+
+                        
                     </ul>
                     {% block search %}
 

@@ -2,7 +2,7 @@
 {% load bootstrap4 %}
 {% block title %}Контроль чеков{% endblock %}
 
-{% block searchdate %}
+{% block control %}
 <li class="nav-item active">
     <td><a class="nav-link" href="{% url 'date_control' %}">Поиск по дате</a></td>
     </li>
@@ -41,7 +41,7 @@
             <td>{{ c.check }}</td>
             <td>{{ c.post }}</td>
             {% if c.comment %}
-            <td><textarea readonly cols="60" rows="5">{{ c.comment }}</textarea></td>
+            <td><textarea readonly cols="60" rows="3">{{ c.comment }}</textarea></td>
             {% else %}
             <td></td>
             {% endif %}
