@@ -4,7 +4,7 @@ from django.forms import formset_factory
 from django.db.models import Q
 from django.core.paginator import Paginator
 
-from .models import Stock, Storages, Products, Done, Control
+from .models import Stock, Storages, Products, Done, Control, Move
 from .forms import StockKorrSet, SearchForm, PriemkaForm, VidachaForm, ControlForm, CheckSearchForm, CommentForm, DateSearchForm, to_Form
 
 
@@ -377,6 +377,14 @@ def to(request, storage_id, storage_to):
 						pr.save()
 						######################
 
+					mv = Move()
+					mv.fromstorage = current_storage
+					mv.tostorage = to_storage
+					q = Q(barcode=formBarcode) | Q(LM=formBarcode)
+					mv.product = Products.objects.get(q)
+					mv.quantity = quantity
+					mv.save()
+
 					return redirect('/storage/{}'.format(storage_id))
 		else:
 			do = 'Списание'
@@ -387,3 +395,35 @@ def to(request, storage_id, storage_to):
 		formset = TF(form_kwargs={'storage': storage_id})
 		context={'form': formset, 'storages': storages, 'current_storage': current_storage, 'do': do}
 		return render(request, 'vaultroom/stockorr.html', context)
+
+
+def move(request):
+	move = Move.objects.select_related('product', 'tostorage', 'fromstorage').order_by('-time')
+	storages = Storages.objects.all()
+	paginator = Paginator(move, 30)
+	if 'page' in request.GET:
+		page_num = request.GET['page']
+	else:
+		page_num = 1
+	page = paginator.get_page(page_num)
+	context = {'move': page.object_list, 'page': page, 'storages': storages}
+	return render(request, 'vaultroom/move.html', context)
+
+
+def dateMove(request):
+	if request.method == 'POST':
+		df = DateSearchForm(request.POST)
+		day = request.POST['date_day']
+		month = request.POST['date_month']
+		year = request.POST['date_year']
+		if df.is_valid():
+			return redirect('/move/{}/{}/{}/'.format(year, month, day))
+		else:
+			df = DateSearchForm()
+			context = {'df': df}
+			return render(request, 'vaultroom/datesearch.html', context)
+
+	else:
+		df = DateSearchForm()
+		context = {'df':df}
+		return render(request, 'vaultroom/datesearch.html', context)

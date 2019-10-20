@@ -70,3 +70,15 @@ class Control(models.Model):
         verbose_name_plural = 'Выданные чеки'
         verbose_name = 'Выданный чек'
         ordering = ['-time']
+
+class Move(models.Model):
+    product = models.ForeignKey('Products', on_delete=models.PROTECT, verbose_name='Товар')
+    fromstorage = models.ForeignKey('Storages', on_delete=models.PROTECT, verbose_name='Откуда', related_name='fromstorage')
+    tostorage = models.ForeignKey('Storages', on_delete=models.PROTECT, verbose_name='Куда', related_name='tostorage')
+    quantity = models.IntegerField(verbose_name='Количество товара')
+    time = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name='Время перемещения')
+
+    class Meta:
+        verbose_name_plural = 'Перемещенный товар'
+        verbose_name = 'Перемещенный товар'
+        ordering = ['-time']
