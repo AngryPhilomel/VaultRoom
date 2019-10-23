@@ -3,6 +3,10 @@ from django.urls import reverse_lazy
 from django.forms import formset_factory
 from django.db.models import Q
 from django.core.paginator import Paginator
+import csv
+from django.http import HttpResponse
+import xlwt
+
 
 from .models import Stock, Storages, Products, Done, Control, Move, Priniato
 from .forms import StockKorrSet, SearchForm, PriemkaForm, VidachaForm, ControlForm, CheckSearchForm, CommentForm, DateSearchForm, to_Form
@@ -463,3 +467,48 @@ def dateMove(request):
 		df = DateSearchForm()
 		context = {'df':df}
 		return render(request, 'vaultroom/datesearch.html', context)
+
+
+def csv_ex(request):
+	response = HttpResponse(content_type='text/csv', charset='Windows-1251')
+	response['Content-Disposition'] = 'attachment; filename="stock.csv"'
+	src = Stock.objects.select_related('product', 'storage').all()
+	writer = csv.writer(response)
+	writer.writerow(['Товар','LM','Штрихкод', 'Склад', 'Количество'])
+	for s in src:
+		writer.writerow([s.product, s.product.LM, s.product.barcode , s.storage, s.quantity])
+
+	return response
+
+
+def export_xlsx(request):
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="stock.xls"'
+
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('stock')
+
+    # Sheet header, first row
+    row_num = 0
+
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+
+    columns = ['Товар','LM','Штрихкод', 'Склад', 'Количество', ]
+
+    for col_num in range(len(columns)):
+        ws.write(row_num, col_num, columns[col_num], font_style)
+
+    # Sheet body, remaining rows
+    font_style = xlwt.XFStyle()
+
+
+    rows = Stock.objects.select_related('product', 'storage').all().values_list('product__name','product__LM', 'product__barcode', 'storage__name', 'quantity',)
+    for row in rows:
+        row_num += 1
+        for col_num in range(len(row)):
+            ws.write(row_num, col_num, row[col_num], font_style)
+
+    wb.save(response)
+    return response
+
