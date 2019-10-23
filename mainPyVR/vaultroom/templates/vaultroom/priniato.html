@@ -1,0 +1,33 @@
+{% extends "layout/basic.html" %}
+{% block title %}Выдано{% endblock%}
+{% load bootstrap4 %}
+
+{% block control %}
+<li class="nav-item active">
+    <td><a class="nav-link" href="{% url 'date_priniato' %}">Поиск по дате</a></td>
+    </li>
+{% endblock %}
+
+{% block content %}
+{% bootstrap_pagination page size='sm' %}
+<table class="table">
+    <tr>
+        <th scope="col">Товар</th>
+        <th scope="col">Склад</th>
+        <th scope="col">Количество</th>
+        <th scope="col">Дата</th>
+
+        </tr>
+    {% for d in done %}
+        <tr>
+            <td>{{ d.product.name }}</td>
+            <td>{{ d.storage.name }}</td>
+            <td>{{ d.quantity }}</td>
+            <td>{{ d.time }}</td>
+        </tr>
+    {% endfor %}
+
+
+</table>
+
+{% endblock %}

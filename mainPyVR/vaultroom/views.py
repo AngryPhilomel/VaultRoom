@@ -4,7 +4,7 @@ from django.forms import formset_factory
 from django.db.models import Q
 from django.core.paginator import Paginator
 
-from .models import Stock, Storages, Products, Done, Control, Move
+from .models import Stock, Storages, Products, Done, Control, Move, Priniato
 from .forms import StockKorrSet, SearchForm, PriemkaForm, VidachaForm, ControlForm, CheckSearchForm, CommentForm, DateSearchForm, to_Form
 
 
@@ -96,6 +96,20 @@ def done(request):
     return render(request, 'vaultroom/done.html', context)
 
 
+def priniato(request):
+    priniato = Priniato.objects.select_related('product', 'storage').order_by('-time')
+    storages = Storages.objects.all()
+    paginator = Paginator(priniato, 30)
+    if 'page' in request.GET:
+        page_num = request.GET['page']
+    else:
+        page_num = 1
+    page = paginator.get_page(page_num)
+    context = {'done': page.object_list, 'page': page, 'storages': storages}
+    return render(request, 'vaultroom/priniato.html', context)
+
+
+
 def stockKorr(request, product_id):
     if request.method == 'POST':
         formset = StockKorrSet(request.POST, queryset= Stock.objects.select_related('product','storage').filter(product=product_id))
@@ -145,6 +159,12 @@ def priemka(request, storage_id):
                         pr.product = Products.objects.get(q)
                         pr.quantity = quantity
                         pr.save()
+
+                    pr = Priniato()
+                    pr.product = Products.objects.get(barcode=formBarcode)
+                    pr.storage = current_storage
+                    pr.quantity = quantity
+                    pr.save()
                     #####
             return redirect('/storage/{}'.format(storage_id))
         else:
@@ -305,6 +325,23 @@ def dateDone(request):
 		context = {'df':df}
 		return render(request, 'vaultroom/datesearch.html', context)
 
+def datePriniato(request):
+	if request.method == 'POST':
+		df = DateSearchForm(request.POST)
+		day = request.POST['date_day']
+		month = request.POST['date_month']
+		year = request.POST['date_year']
+		if df.is_valid():
+			return redirect('/priniato/{}/{}/{}/'.format(year, month, day))
+		else:
+			df = DateSearchForm()
+			context = {'df': df}
+			return render(request, 'vaultroom/datesearch.html', context)
+
+	else:
+		df = DateSearchForm()
+		context = {'df':df}
+		return render(request, 'vaultroom/datesearch.html', context)
 
 def dateControl(request):
 	if request.method == 'POST':
@@ -384,8 +421,7 @@ def to(request, storage_id, storage_to):
 					mv.product = Products.objects.get(q)
 					mv.quantity = quantity
 					mv.save()
-
-					return redirect('/storage/{}'.format(storage_id))
+			return redirect('/storage/{}'.format(storage_id))
 		else:
 			do = 'Списание'
 			context = {'form': formset, 'current_storage': current_storage, 'do': do}

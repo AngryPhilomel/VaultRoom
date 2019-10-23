@@ -1,0 +1,24 @@
+{% extends "layout/basic.html" %}
+{% load bootstrap4 %}
+{% block title %}Контроль чеков{% endblock %}
+
+
+{% block content %}
+
+    <table class="table">
+        <tr>
+            <th scope="col">Товар</th>
+             <th scope="col">Количество</th>
+             <th scope="col">Дата</th>
+        </tr>
+        {{ day }}
+        {% for c in object_list %}
+        <tr>
+            <td>{{ c.product }}</td>
+            <td>{{ c.quantity }}</td>
+            <td>{{ c.time }}</td>
+        </tr>
+        {% endfor %}
+
+
+{% endblock %}

@@ -16,8 +16,8 @@ Including another URLconf
 from django.urls import path
 from django.views.generic.dates import DayArchiveView
 
-from .models import Control, Done, Move
-from .views import index, by_storage, by_product, done, stockKorr, priemka, vidacha, control, comment, dateDone, dateControl, to, move, dateMove
+from .models import Control, Done, Move, Priniato
+from .views import index, by_storage, by_product, done, stockKorr, priemka, vidacha, control, comment, dateDone, dateControl, to, move, dateMove, priniato, datePriniato
 
 
 
@@ -39,7 +39,8 @@ urlpatterns = [
     path('done/date/', dateDone, name='date_done'),
     path('move/date/', dateMove, name='date_move'),
     path('move/<int:year>/<int:month>/<int:day>/', DayArchiveView.as_view(model=Move, date_field='time', month_format='%m')),
-
-
+	path('priniato/', priniato, name='priniato'),
+	path('priniato/<int:year>/<int:month>/<int:day>/', DayArchiveView.as_view(model=Priniato, date_field='time', month_format='%m')),
+	path('priniato/date/', datePriniato, name='date_priniato'),
 
 ]

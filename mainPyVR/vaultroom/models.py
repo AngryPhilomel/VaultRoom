@@ -82,3 +82,15 @@ class Move(models.Model):
         verbose_name_plural = 'Перемещенный товар'
         verbose_name = 'Перемещенный товар'
         ordering = ['-time']
+
+
+class Priniato(models.Model):
+    product = models.ForeignKey('Products', on_delete=models.PROTECT, verbose_name='Принятый товар')
+    storage = models.ForeignKey('Storages', on_delete=models.PROTECT, verbose_name='Склад')
+    quantity = models.IntegerField(verbose_name='Количество принятого товара')
+    time = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name='Время приемки')
+
+    class Meta:
+        verbose_name_plural = 'Принятый товар'
+        verbose_name = 'Принятый товар'
+        ordering = ['-time']
