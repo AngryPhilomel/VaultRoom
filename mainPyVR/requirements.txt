@@ -6,3 +6,4 @@ soupsieve==1.9.4
 sqlparse==0.3.0
 gevent
 gunicorn
+xlwt
