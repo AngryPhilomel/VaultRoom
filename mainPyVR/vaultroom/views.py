@@ -494,7 +494,7 @@ def export_xlsx(request):
     font_style = xlwt.XFStyle()
     font_style.font.bold = True
 
-    columns = ['Товар','LM','Штрихкод', 'Склад', 'Количество', ]
+    columns = ['Товар','LM','Штрихкод','Отдел', 'Склад', 'Количество', ]
 
     for col_num in range(len(columns)):
         ws.write(row_num, col_num, columns[col_num], font_style)
@@ -503,7 +503,7 @@ def export_xlsx(request):
     font_style = xlwt.XFStyle()
 
 
-    rows = Stock.objects.select_related('product', 'storage').all().values_list('product__name','product__LM', 'product__barcode', 'storage__name', 'quantity',)
+    rows = Stock.objects.select_related('product', 'storage').all().values_list('product__name','product__LM', 'product__barcode', 'product__department', 'storage__name', 'quantity',)
     for row in rows:
         row_num += 1
         for col_num in range(len(row)):
