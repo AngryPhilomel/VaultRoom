@@ -165,7 +165,8 @@ def priemka(request, storage_id):
                         pr.save()
 
                     pr = Priniato()
-                    pr.product = Products.objects.get(barcode=formBarcode)
+                    q = Q(barcode=formBarcode) | Q(LM=formBarcode)
+                    pr.product = Products.objects.get(q)
                     pr.storage = current_storage
                     pr.quantity = quantity
                     pr.save()
