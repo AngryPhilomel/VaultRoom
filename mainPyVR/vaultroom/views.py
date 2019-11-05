@@ -3,6 +3,7 @@ from django.urls import reverse_lazy
 from django.forms import formset_factory
 from django.db.models import Q
 from django.core.paginator import Paginator
+from django.db.transaction import atomic
 import csv
 from django.http import HttpResponse
 import xlwt
@@ -128,7 +129,7 @@ def stockKorr(request, product_id):
         context = {'form': formset}
         return render(request, 'vaultroom/stockorr.html', context)
 
-
+@atomic
 def priemka(request, storage_id):
     PF = formset_factory(PriemkaForm, extra=10)
     current_storage = Storages.objects.get(pk=storage_id)
@@ -166,7 +167,7 @@ def priemka(request, storage_id):
 
                     pr = Priniato()
                     q = Q(barcode=formBarcode) | Q(LM=formBarcode)
-                    pr.product = Products.objects.get(q)
+                    pr.product = Products.objects.get(barcode=formBarcode)
                     pr.storage = current_storage
                     pr.quantity = quantity
                     pr.save()
@@ -182,7 +183,7 @@ def priemka(request, storage_id):
         context = {'form': formset, 'current_storage': current_storage, 'do': do}
         return render(request, 'vaultroom/stockorr.html', context)
 
-
+@atomic
 def vidacha(request, storage_id):
     current_storage = Storages.objects.get(pk=storage_id)
     PF = formset_factory(VidachaForm, extra=5)
