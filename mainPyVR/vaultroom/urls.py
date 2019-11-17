@@ -19,6 +19,7 @@ from django.views.generic.dates import DayArchiveView
 from .models import Control, Done, Move, Priniato
 from .views import index, by_storage, by_product, done, stockKorr, priemka, vidacha, control, comment, dateDone, dateControl, to, move, dateMove, priniato, datePriniato
 from .views import csv_ex, export_xlsx
+from .views import api_stock
 
 
 
@@ -44,6 +45,8 @@ urlpatterns = [
 	path('priniato/<int:year>/<int:month>/<int:day>/', DayArchiveView.as_view(model=Priniato, date_field='time', month_format='%m')),
 	path('priniato/date/', datePriniato, name='date_priniato'),
 	path('csv/', csv_ex, name='csv'),
-	path('xlsx/', export_xlsx, name='xlsx')
+	path('xlsx/', export_xlsx, name='xlsx'),
+	path('api/stock/', api_stock),
+
 
 ]

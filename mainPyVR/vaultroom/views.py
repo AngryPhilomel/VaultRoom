@@ -7,10 +7,14 @@ from django.db.transaction import atomic
 import csv
 from django.http import HttpResponse
 import xlwt
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from rest_framework import status
 
 
 from .models import Stock, Storages, Products, Done, Control, Move, Priniato
 from .forms import StockKorrSet, SearchForm, PriemkaForm, VidachaForm, ControlForm, CheckSearchForm, CommentForm, DateSearchForm, to_Form
+from .serializers import StoragesSerializer, StockSerializer
 
 
 
@@ -513,4 +517,55 @@ def export_xlsx(request):
 
     wb.save(response)
     return response
+
+
+#############API######################
+'''
+@api_view(['GET', 'POST'])
+def api_storages(request):
+	if request.method == 'GET':
+		storages = Storages.objects.all()
+		serializer = StoragesSerializer(storages, many=True)
+		return Response(serializer.data)
+	elif request.method == 'POST':
+		serializer = StoragesSerializer(data=request.data)
+		if serializer.is_valid():
+			serializer.save()
+			return Response(serializer.data, status=status.HTTP_201_CREATED)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
+def api_storages_detail(request, pk):
+		storage = Storages.objects.get(pk=pk)
+		if request.method == 'GET':
+			serializer = StoragesSerializer(storage)
+			return Response(serializer.data)
+		elif request.method == 'PUT' or request.method == 'PATCH':
+			serializer = StoragesSerializer(storage, data=request.data)
+			if serializer.is_valid():
+				serializer.save()
+				return Response(serializer.data)
+			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+		elif request.method == 'DELETE':
+			storage.delete()
+			return Response(status=status.HTTP_204_NO_CONTENT)
+'''
+@api_view(['GET', 'POST'])
+def api_stock(request):
+	if request.method == 'GET':
+		stock = Stock.objects.select_related('storage','product').all()
+		serializer = StockSerializer(stock, many=True)
+		return Response(serializer.data)
+	elif request.method == 'POST':
+		serializer = StockSerializer(data=request.data)
+		if serializer.is_valid():
+			q = Q(storage=serializer.validated_data['storage_id']) & Q(product=serializer.validated_data['product_id'])
+			try:
+				addStock = Stock.objects.get(q)
+				addStock.quantity += serializer.validated_data['quantity']
+				addStock.save()
+			except:
+				serializer.save()
+			return Response(serializer.data, status=status.HTTP_201_CREATED)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

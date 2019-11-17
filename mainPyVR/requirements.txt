@@ -7,3 +7,5 @@ sqlparse==0.3.0
 gevent
 gunicorn
 xlwt
+djangorestframework
+django-cors-headers
