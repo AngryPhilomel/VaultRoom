@@ -569,3 +569,15 @@ def api_stock(request):
 			return Response(serializer.data, status=status.HTTP_201_CREATED)
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['GET'])
+def api_search(request, search):
+	if request.method == 'GET':
+		q = Q(LM=search) | Q(barcode=search)
+		try:
+			current_product = Products.objects.get(q)
+			stock = Stock.objects.select_related('product', 'storage').filter(product=current_product.id)
+			serializer = StockSerializer(stock, many=True)
+			return Response(serializer.data)
+		except:
+			return redirect(reverse_lazy('api_stock'))
+
