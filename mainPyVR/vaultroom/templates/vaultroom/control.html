@@ -4,6 +4,9 @@
 
 {% block control %}
 <li class="nav-item active">
+     <td><a class="nav-link" href="{% url 'export_check' %}">Экспорт чеков</a></td>
+ </li>
+<li class="nav-item active">
     <td><a class="nav-link" href="{% url 'date_control' %}">Поиск по дате</a></td>
     </li>
 {% endblock %}

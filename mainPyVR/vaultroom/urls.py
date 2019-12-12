@@ -18,7 +18,7 @@ from django.views.generic.dates import DayArchiveView
 
 from .models import Control, Done, Move, Priniato
 from .views import index, by_storage, by_product, done, stockKorr, priemka, vidacha, control, comment, dateDone, dateControl, to, move, dateMove, priniato, datePriniato
-from .views import csv_ex, export_xlsx
+from .views import csv_ex, export_xlsx, export_check
 from .views import api_stock, api_search
 
 
@@ -46,6 +46,7 @@ urlpatterns = [
 	path('priniato/date/', datePriniato, name='date_priniato'),
 	path('csv/', csv_ex, name='csv'),
 	path('xlsx/', export_xlsx, name='xlsx'),
+	path('export_check/', export_check, name='export_check'),
 	path('api/stock/', api_stock, name='api_stock'),
 	path('api/search/<int:search>', api_search),
 

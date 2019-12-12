@@ -10,6 +10,7 @@ import xlwt
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
+import datetime
 
 
 from .models import Stock, Storages, Products, Done, Control, Move, Priniato
@@ -133,6 +134,7 @@ def stockKorr(request, product_id):
         context = {'form': formset}
         return render(request, 'vaultroom/stockorr.html', context)
 
+
 @atomic
 def priemka(request, storage_id):
     PF = formset_factory(PriemkaForm, extra=10)
@@ -187,6 +189,7 @@ def priemka(request, storage_id):
         context = {'form': formset, 'current_storage': current_storage, 'do': do}
         return render(request, 'vaultroom/stockorr.html', context)
 
+
 @atomic
 def vidacha(request, storage_id):
     current_storage = Storages.objects.get(pk=storage_id)
@@ -230,6 +233,7 @@ def vidacha(request, storage_id):
         formset = PF(form_kwargs={'storage': storage_id})
         context = {'form': formset, 'current_storage': current_storage, 'do': do}
         return render(request, 'vaultroom/stockorr.html', context)
+
 
 
 def control(request):
@@ -301,6 +305,7 @@ def control(request):
             return render(request, 'vaultroom/control.html', context)
 
 
+
 def comment(request, check_id):
     if request.method == 'POST':
         ctr = Control.objects.get(id=check_id)
@@ -316,6 +321,8 @@ def comment(request, check_id):
         form = CommentForm(instance=ctr)
         context = {'form': form}
         return render(request, 'vaultroom/comment.html', context)
+
+
 
 def dateDone(request):
 	if request.method == 'POST':
@@ -335,6 +342,8 @@ def dateDone(request):
 		context = {'df':df}
 		return render(request, 'vaultroom/datesearch.html', context)
 
+
+
 def datePriniato(request):
 	if request.method == 'POST':
 		df = DateSearchForm(request.POST)
@@ -352,6 +361,8 @@ def datePriniato(request):
 		df = DateSearchForm()
 		context = {'df':df}
 		return render(request, 'vaultroom/datesearch.html', context)
+
+
 
 def dateControl(request):
 	if request.method == 'POST':
@@ -371,6 +382,8 @@ def dateControl(request):
 		context = {'df':df}
 		return render(request, 'vaultroom/datesearch.html', context)
 
+
+@atomic
 def to(request, storage_id, storage_to):
 	current_storage = Storages.objects.get(id=storage_id)
 	to_storage = Storages.objects.get(id=storage_to)
@@ -456,6 +469,7 @@ def move(request):
 	return render(request, 'vaultroom/move.html', context)
 
 
+
 def dateMove(request):
 	if request.method == 'POST':
 		df = DateSearchForm(request.POST)
@@ -475,6 +489,7 @@ def dateMove(request):
 		return render(request, 'vaultroom/datesearch.html', context)
 
 
+
 def csv_ex(request):
 	response = HttpResponse(content_type='text/csv', charset='Windows-1251')
 	response['Content-Disposition'] = 'attachment; filename="stock.csv"'
@@ -485,6 +500,7 @@ def csv_ex(request):
 		writer.writerow([s.product, s.product.LM, s.product.barcode , s.storage, s.quantity])
 
 	return response
+
 
 
 def export_xlsx(request):
@@ -518,6 +534,40 @@ def export_xlsx(request):
     wb.save(response)
     return response
 
+
+def export_check(request):
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="check.xls"'
+
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('check')
+
+    # Sheet header, first row
+    row_num = 0
+
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+
+    columns = ['Чек','Пост', 'Комментарий', 'Кол-во паллет', 'Время', ]
+
+    for col_num in range(len(columns)):
+        ws.write(row_num, col_num, columns[col_num], font_style)
+
+    # Sheet body, remaining rows
+    font_style = xlwt.XFStyle()
+
+
+    rows = Control.objects.all().values_list('check','post', 'comment', 'pallet','time',)
+    rows = [[x.strftime("%Y-%m-%d %H+3:%M") if isinstance(x, datetime.datetime) else x for x in row] for row in rows]
+
+    for row in rows:
+        row_num += 1
+        for col_num in range(len(row)):
+
+            ws.write(row_num, col_num, row[col_num], font_style)
+
+    wb.save(response)
+    return response
 
 #############API######################
 '''
